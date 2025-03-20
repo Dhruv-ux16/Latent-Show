@@ -16,7 +16,13 @@ app.get("/", (req, res) => {
 app.get("/joke", async (req, res) => {
     try {
         const result = await axios.get(api_url);
-        res.render("index.ejs", { content: JSON.stringify(result.data) });
+        const jokeData = result.data;
+
+        const joke = jokeData.type === "twopart"
+            ? `${jokeData.setup} - ${jokeData.delivery}`
+            : jokeData.joke;
+
+        res.render("index.ejs", { content: joke });
     } catch (error) {
         res.render("index.ejs", { content: JSON.stringify(error.response.data) });
     }
